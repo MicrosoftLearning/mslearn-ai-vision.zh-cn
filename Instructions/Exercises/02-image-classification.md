@@ -1,10 +1,10 @@
 ---
 lab:
-  title: 使用 Azure AI Vision 自定义模型对图像进行分类
+  title: 使用 Azure AI 视觉自定义模型对图像进行分类
   module: Module 2 - Develop computer vision solutions with Azure AI Vision
 ---
 
-# 使用 Azure AI Vision 自定义模型对图像进行分类
+# 使用 Azure AI 视觉自定义模型对图像进行分类
 
 Azure AI Vision 可让您训练自定义模型，使用您指定的标签对物体进行分类和检测。 在本实验室中，我们将建立一个自定义图像分类模型，对水果图像进行分类。
 
@@ -13,7 +13,7 @@ Azure AI Vision 可让您训练自定义模型，使用您指定的标签对物�
 如果还没有将 **Azure AI Vision** 代码库克隆到正在进行本实验的环境中，请按照以下步骤进行克隆。 否则，请在 Visual Studio Code 中打开克隆的文件夹。
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行**Git：克隆**命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -91,7 +91,7 @@ Azure AI Vision 可让您训练自定义模型，使用您指定的标签对物�
     - **选择训练数据集**：training_images
     - 其他设置保持默认，然后选择**训练模型**
 
-训练可能需要一些时间--默认预算为一小时，但对于这个小数据集来说，通常比这要快得多。 每隔几分钟选择**刷新**按钮，直到任务状态为*成功*。 选择模型。
+训练可能需要一些时间--默认预算为一小时，但对于这个小数据集来说，通常比这要快得多。 每隔几分钟选择**刷新**按钮，直到任务状态为*成功*。 选择该模型。
 
 在此，您可以查看训练作业的性能。 查看训练模型的精度和准确度。
 
