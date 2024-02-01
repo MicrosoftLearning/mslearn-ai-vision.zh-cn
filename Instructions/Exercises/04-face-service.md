@@ -6,16 +6,16 @@ lab:
 
 # 检测和分析人脸
 
-检测和分析人脸的能力是一项核心 AI 功能。 在此练习中，你将探索两个可用于处理图像中人脸的 Azure AI 服务：Azure AI 视觉**** 服务和人脸**** 服务。
+检测和分析人脸的能力是一项核心 AI 功能。 在此练习中，你将探索两个可用于处理图像中的人脸的 Azure AI 服务：**Azure AI 视觉**服务和**人脸**服务。
 
-> **备注**：从 2022 年 6 月 21 日开始，返回个人身份信息的 Azure AI 服务功能仅限于被授予[有限访问权限](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-limited-access)的客户。 此外，推断情绪状态的功能不再可用。 这些限制可能会影响本实验室练习。 我们正在努力解决此问题，但与此同时，执行以下步骤时可能会遇到一些错误；对此我们深表歉意。 有关 Microsoft 所做的更改的更多详细信息，以及原因 - 请参阅[负责任 AI 投资和面部识别防护措施](https://azure.microsoft.com/blog/responsible-ai-investments-and-safeguards-for-facial-recognition/)。
+> **注意**：从 2022 年 6 月 21 日开始，返回个人身份信息的 Azure AI 服务的功能仅限于被授予[有限访问权限](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-limited-access)的客户。 此外，推断情绪状态的功能不再可用。 这些限制可能会影响本实验室练习。 我们正在努力解决此问题，但与此同时，执行以下步骤时可能会遇到一些错误；对此我们深表歉意。 有关 Microsoft 所做的更改的更多详细信息，以及原因 - 请参阅[负责任 AI 投资和面部识别防护措施](https://azure.microsoft.com/blog/responsible-ai-investments-and-safeguards-for-facial-recognition/)。
 
 ## 克隆本课程的存储库
 
 如果尚未克隆用于本课程的存储库，请克隆它：
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行**Git：克隆**命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -43,32 +43,32 @@ lab:
 > **注意**：可选择将该 SDK 用于 **C#** 或 **Python**。 在下面的步骤中，请执行适用于你的语言首选项的操作。
 
 1. 在 Visual Studio Code 的**资源管理器**窗格中，浏览到 **04-face** 文件夹，并根据你的语言首选项展开 **C-Sharp** 文件夹或 **Python** 文件夹。
-2. 右键单击 **computer-vision** 文件夹，并打开集成终端。 然后运行适用于你的语言首选项的命令，安装 Azure AI 视觉 SDK 包：
+2. 右键单击 **computer-vision** 文件夹，并打开集成终端。 然后通过运行适用于你的语言首选项的命令，安装 Azure AI 视觉 SDK 包：
 
     **C#**
 
     ```
-    dotnet add package Azure.AI.Vision.ImageAnalysis --prerelease
+    dotnet add package Azure.AI.Vision.ImageAnalysis -v 0.15.1-beta.1
     ```
 
     **Python**
 
     ```
-    pip install azure-ai-vision
+    pip install azure-ai-vision==0.15.1b1
     ```
     
 3. 查看 **computer-vision** 文件夹的内容，并注意其中包含一个配置设置文件：
     - **C#** ：appsettings.json
     - **Python**：.env
 
-4. 打开配置文件，然后更新其中包含的配置值，以反映 Azure AI 服务资源的终结点**** 和身份验证密钥****。 保存所做的更改。
+4. 打开配置文件，然后更新其中包含的配置值，以反映 Azure AI 服务资源的**终结点**和身份验证**密钥**。 保存所做更改。
 
 5. 请注意，**computer-vision** 文件夹中包含客户端应用程序的代码文件：
 
     - **C#** ：Program.cs
     - **Python**：detect-people.py
 
-6. 打开代码文件，并在顶部的现有命名空间引用下找到注释**导入命名空间**。 然后在此注释下添加以下特定于语言的代码，以导入使用 Azure AI 视觉 SDK 所需的命名空间：
+6. 打开代码文件，并在顶部的现有命名空间引用下找到注释**导入命名空间**。 然后在此注释下添加以下特定于语言的代码，以导入使用计算机视觉 SDK 所需的命名空间：
 
     **C#**
 
@@ -87,16 +87,16 @@ lab:
 
 ## 查看要分析的图像
 
-在此练习中，你将使用 Azure AI 视觉服务来分析人类图像。
+在此练习中，你将使用 Azure AI 视觉服务来分析人群图像。
 
 1. 在 Visual Studio Code 中，展开 **computer-vision** 文件夹以及其中包含的 **images** 文件夹。
 2. 选择并查看 **people.jpg** 图像。
 
 ## 在图像中检测人脸
 
-现在，你可使用 SDK 来调用视觉服务并检测图像中的人脸。
+现在，你可使用 SDK 来调用 Azure AI 视觉服务并检测图像中的人脸。
 
-1. 在客户端应用程序的代码文件（**Program.cs** 或 **detect-people.py**）中，可在 **Main** 函数中看到已提供用于加载配置设置的代码。 然后查找注释对 Azure AI 视觉客户端进行身份验证****。 然后在此注释下添加以下特定于语言的代码，以创建 Azure AI 视觉客户端对象并对其进行身份验证：
+1. 在客户端应用程序的代码文件（**Program.cs** 或 **detect-people.py**）中，可在 **Main** 函数中看到已提供用于加载配置设置的代码。 然后查找注释对 Azure AI 视觉客户端进行身份验证****。 然后在此注释下添加以下特定于语言的代码，以创建计算机视觉对象客户端对象并对其进行身份验证：
 
     **C#**
 
@@ -283,7 +283,7 @@ lab:
     - **C#** ：appsettings.json
     - **Python**：.env
 
-4. 打开配置文件，然后更新其中包含的配置值，以反映 Azure AI 服务资源的终结点**** 和身份验证密钥****。 保存所做的更改。
+4. 打开配置文件，然后更新其中包含的配置值，以反映 Azure AI 服务资源的**终结点**和身份验证**密钥**。 保存所做更改。
 
 5. 请注意，**face-api** 文件夹中包含客户端应用程序的代码文件：
 
@@ -488,8 +488,8 @@ with open(image_file, mode="rb") as image_data:
 
 ## 详细信息
 
-**人脸**服务中提供了几个附加功能，但根据[负责任 AI 标准](https://aka.ms/aah91ff)，这些功能受限于有限访问策略。 这些功能包括识别、验证和创建面部识别模型。 要了解详细信息并申请访问权限，请参见 [Azure AI 服务的有限访问](https://docs.microsoft.com/en-us/azure/cognitive-services/cognitive-services-limited-access)。
+**人脸**服务中提供了几个附加功能，但根据[负责任 AI 标准](https://aka.ms/aah91ff)，这些功能受限于有限访问策略。 这些功能包括识别、验证和创建面部识别模型。 若要了解详细信息并申请访问权限，请参阅[Azure AI 服务的有限访问](https://docs.microsoft.com/en-us/azure/cognitive-services/cognitive-services-limited-access)。
 
-有关使用 Azure AI 视觉**** 服务进行人脸检测的详细信息，请参见 [Azure AI 视觉文档](https://docs.microsoft.com/azure/cognitive-services/computer-vision/concept-detecting-faces)。
+有关使用 **Azure AI 视觉**服务进行面部检测的详细信息，请参阅[Azure AI 视觉文档](https://docs.microsoft.com/azure/cognitive-services/computer-vision/concept-detecting-faces)。
 
 要详细了解**人脸**服务，请参阅[人脸文档](https://docs.microsoft.com/azure/cognitive-services/face/)。
