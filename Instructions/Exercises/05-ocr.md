@@ -13,7 +13,7 @@ lab:
 如果尚未克隆用于本课程的存储库，请克隆它：
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行**Git：克隆**命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -21,15 +21,15 @@ lab:
 
 ## 预配 Azure AI 服务资源
 
-如果订阅中还没有 **Azure AI 服务**资源，则需要预配认知服务资源。
+如果订阅中还没有，则需要预配 **Azure AI 服务**资源。
 
 1. 打开 Azure 门户 (`https://portal.azure.com`)，然后使用与你的 Azure 订阅关联的 Microsoft 帐户登录。
-2. 在顶部搜索栏中搜索 *Azure AI 服务*，选择 **Azure AI 服务**，然后使用以下设置创建 Azure AI 服务多服务帐户资源：
+2. 在顶部搜索栏中，搜索 *Azure AI 服务*，选择Azure AI 服务****，并使用以下设置创建 Azure AI 服务多服务帐户资源：
     - **订阅**：*Azure 订阅*
     - **资源组**：*选择或创建一个资源组（如果使用受限制的订阅，你可能无权创建新的资源组 - 请使用提供的资源组）*
     - **区域：***从美国东部、法国中部、韩国中部、北欧、东南亚、西欧、美国西部或东亚中选择\**
     - **名称**：输*入唯一名称*
-    - **定价层**：标准 S0
+    - **定价层**：标准版 S0
 
     \*Azure AI Vision 4.0 功能目前仅在这些地区提供。
 
@@ -49,7 +49,7 @@ lab:
     **C#**
     
     ```csharp
-    dotnet add package Azure.AI.Vision.ImageAnalysis --prerelease
+    dotnet add package Azure.AI.Vision.ImageAnalysis -v 0.15.1-beta.1
     ```
 
     > **注意**：如果提示您安装开发工具包扩展，您可以安全关闭该消息。
@@ -57,14 +57,14 @@ lab:
     **Python**
     
     ```python
-    pip install azure-ai-vision
+    pip install azure-ai-vision==0.15.1b1
     ```
 
 3. 查看 **read-text** 文件夹的内容，并注意其中包含一个配置设置文件：
     - **C#** ：appsettings.json
     - **Python**：.env
 
-    打开配置文件，然后更新其中包含的配置值，以反映认知服务资源的**终结点**和身份验证**密钥**。 保存所做更改。
+    打开配置文件，然后更新其中包含的配置值，以反映 Azure AI 服务资源的**终结点**和身份验证**密钥**。 保存所做更改。
 
 
 ## 使用 Azure AI Vision SDK 从图像中读取文本
@@ -438,6 +438,6 @@ python read-text.py
 
 3. 在资源页面上，选择**删除**，然后按照说明删除资源。
 
-## 更多信息
+## 详细信息
 
 有关使用 **Azure AI 视觉** 服务读取文本的详细信息，请参阅 [Azure AI Vision 文档](https://learn.microsoft.com/azure/ai-services/computer-vision/overview-ocr)。

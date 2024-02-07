@@ -10,10 +10,10 @@ Azure AI 视觉是一种人工智能功能，可支持软件系统通过分析�
 
 ## 克隆本课程的存储库
 
-如果尚未将 **Azure AI 视觉** 代码存储库克隆到你要在此实验室中使用的环境，请按照以下步骤克隆它。 否则，请在 Visual Studio Code 中打开克隆的文件夹。
+如果还没有将 **Azure AI Vision** 代码库克隆到正在进行本实验的环境中，请按照以下步骤进行克隆。 否则，请在 Visual Studio Code 中打开克隆的文件夹。
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行 **Git：克隆**命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -21,15 +21,15 @@ Azure AI 视觉是一种人工智能功能，可支持软件系统通过分析�
 
 ## 预配 Azure AI 服务资源
 
-如果订阅中还没有 **Azure AI 服务**资源，则需要预配认知服务资源。
+如果订阅中还没有，则需要预配 **Azure AI 服务**资源。
 
 1. 打开 Azure 门户 (`https://portal.azure.com`)，然后使用与你的 Azure 订阅关联的 Microsoft 帐户登录。
-2. 在顶部搜索栏中搜索 *Azure AI 服务*，选择 **Azure AI 服务**，然后使用以下设置创建 Azure AI 服务多服务帐户资源：
+2. 在顶部搜索栏中，搜索 *Azure AI 服务*，选择Azure AI 服务****，并使用以下设置创建 Azure AI 服务多服务帐户资源：
     - **订阅**：*Azure 订阅*
     - **资源组**：*选择或创建一个资源组（如果使用受限制的订阅，你可能无权创建新的资源组 - 请使用提供的资源组）*
     - **区域：***从美国东部、法国中部、韩国中部、北欧、东南亚、西欧、美国西部或东亚中选择\**
-    - **名称**：*输入唯一名称*
-    - **定价层**：标准 S0
+    - **名称**：输*入唯一名称*
+    - **定价层**：标准版 S0
 
     \*Azure AI Vision 4.0 功能目前仅在这些地区提供。
 
@@ -49,7 +49,7 @@ Azure AI 视觉是一种人工智能功能，可支持软件系统通过分析�
     **C#**
     
     ```
-    dotnet add package Azure.AI.Vision.ImageAnalysis --prerelease
+    dotnet add package Azure.AI.Vision.ImageAnalysis -v 0.15.1-beta.1
     ```
 
     > **注意**：如果提示您安装开发工具包扩展，您可以安全关闭该消息。
@@ -57,14 +57,14 @@ Azure AI 视觉是一种人工智能功能，可支持软件系统通过分析�
     **Python**
     
     ```
-    pip install azure-ai-vision
+    pip install azure-ai-vision==0.15.1b1
     ```
     
 3. 查看 **text-analysis** 文件夹的内容，并注意其中包含一个配置设置文件：
     - **C#** ：appsettings.json
     - **Python**：.env
 
-    打开配置文件，然后更新其中包含的配置值，以反映认知服务资源的**终结点**和身份验证**密钥**。 保存所做的更改。
+    打开配置文件，然后更新其中包含的配置值，以反映 Azure AI 服务资源的**终结点**和身份验证**密钥**。 保存所做更改。
 4. 请注意，**image-analysis** 文件夹中包含客户端应用程序的代码文件：
 
     - **C#** ：Program.cs
@@ -556,7 +556,7 @@ analysis_options.segmentation_mode = sdk.ImageSegmentationMode.FOREGROUND_MATTIN
 
 ## 清理资源
 
-如果不将本实验室创建的 Azure 资源用于其他培训模块，可以将其删除，以免产生更多费用。 下面介绍如何操作：
+如果不将本实验室创建的 Azure 资源用于其他培训模块，可以将其删除，以免产生更多费用。 操作步骤如下：
 
 1. 打开 Azure 门户 (`https://portal.azure.com`)，然后使用与你的 Azure 订阅关联的 Microsoft 帐户登录。
 
