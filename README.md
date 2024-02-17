@@ -1,2 +1,2 @@
-# mslearn-ai-vision.zh-cn
-Simp Chinese repo
+# mslearn-ai-vision
+Azure AI 视觉模块的实验室文件
