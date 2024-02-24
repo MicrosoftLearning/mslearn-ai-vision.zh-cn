@@ -48,19 +48,20 @@ lab:
 
     **C#**
     
-    ```csharp
-    dotnet add package Azure.AI.Vision.ImageAnalysis -v 0.15.1-beta.1
+    ```
+    dotnet add package Azure.AI.Vision.ImageAnalysis -v 1.0.0-beta.1
     ```
 
     > **注意**：如果提示您安装开发工具包扩展，您可以安全关闭该消息。
 
     **Python**
     
-    ```python
-    pip install azure-ai-vision==0.15.1b1
+    ```
+    pip install azure-ai-vision-imageanalysis==1.0.0b1
     ```
 
 3. 查看 **read-text** 文件夹的内容，并注意其中包含一个配置设置文件：
+
     - **C#** ：appsettings.json
     - **Python**：.env
 
@@ -78,119 +79,93 @@ lab:
 
     打开代码文件，并在顶部的现有命名空间引用下找到注释**导入命名空间**。 然后在此注释下添加以下特定于语言的代码，以导入使用 Azure AI 视觉 SDK 所需的命名空间：
 
-**C#**
-
-```C#
-// Import namespaces
-using Azure.AI.Vision.Common;
-using Azure.AI.Vision.ImageAnalysis;
-```
-
-**Python**
-
-```Python
-# Import namespaces
-import azure.ai.vision as sdk
-```
+    **C#**
+    
+    ```C#
+    // Import namespaces
+    using Azure.AI.Vision.ImageAnalysis;
+    ```
+    
+    **Python**
+    
+    ```Python
+    # import namespaces
+    from azure.ai.vision.imageanalysis import ImageAnalysisClient
+    from azure.ai.vision.imageanalysis.models import VisualFeatures
+    from azure.core.credentials import AzureKeyCredential
+    ```
 
 2. 在客户端应用程序的代码文件中，可在 **Main** 函数中看到已提供用于加载配置设置的代码。 然后查找注释**Azure AI Vision 客户端的注释** 然后在此注释下添加以下特定于语言的代码，以创建 Azure AI 视觉对象客户端对象并对其进行身份验证：
 
-**C#**
-
-```C#
-// Authenticate Azure AI Vision client
-var cvClient = new VisionServiceOptions(
-    aiSvcEndpoint,
-    new AzureKeyCredential(aiSvcKey));
-```
-
-**Python**
-
-```Python
-# Authenticate Azure AI Vision client
-cv_client = sdk.VisionServiceOptions(ai_endpoint, ai_key)
-```
+    **C#**
+    
+    ```C#
+    // Authenticate Azure AI Vision client
+    ImageAnalysisClient client = new ImageAnalysisClient(
+        new Uri(aiSvcEndpoint),
+        new AzureKeyCredential(aiSvcKey));
+    ```
+    
+    **Python**
+    
+    ```Python
+    # Authenticate Azure AI Vision client
+    cv_client = ImageAnalysisClient(
+        endpoint=ai_endpoint,
+        credential=AzureKeyCredential(ai_key)
+    )
+    ```
 
 3. 在 **Main** 函数中，可在你刚刚添加的代码下看到，代码指定了图像文件的路径，然后将图像路径传递给 **GetTextRead** 函数。 此函数尚未完全实现。
 
-4. 让我们在 **GetTextRead** 函数的正文中添加一些代码。 找到注释**使用分析图像函数读取图像中的文本**。 然后，在该注释下添加以下特定语言代码：
- 
-**C#**
+4. 让我们在 **GetTextRead** 函数的正文中添加一些代码。 找到注释**使用分析图像函数读取图像中的文本**。 然后，在此注释下，添加以下特定于语言的代码，指出在调用 `Analyze` 函数时指定视觉特征：
 
-```C#
-// Use Analyze image function to read text in image
-Console.WriteLine($"\nReading text in {imageFile}\n");
+    **C#**
 
-using (var imageData = File.OpenRead(imageFile))
-{    
-    var analysisOptions = new ImageAnalysisOptions()
+    ```C#
+    // Use Analyze image function to read text in image
+    ImageAnalysisResult result = client.Analyze(
+        BinaryData.FromStream(stream),
+        // Specify the features to be retrieved
+        VisualFeatures.Read);
+    
+    stream.Close();
+    
+    // Display analysis results
+    if (result.Read != null)
     {
-        // Specify features to be retrieved
-
-
-    };
-
-    using var imageSource = VisionSource.FromFile(imageFile);
-
-    using var analyzer = new ImageAnalyzer(serviceOptions, imageSource, analysisOptions);
-
-    var result = analyzer.Analyze();
-
-    if (result.Reason == ImageAnalysisResultReason.Analyzed)
-    {
-        // get image captions
-        if (result.Text != null)
+        Console.WriteLine($"Text:");
+    
+        // Prepare image for drawing
+        System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
+        Graphics graphics = Graphics.FromImage(image);
+        Pen pen = new Pen(Color.Cyan, 3);
+        
+        foreach (var line in result.Read.Blocks.SelectMany(block => block.Lines))
         {
-            Console.WriteLine($"Text:");
-
-            // Prepare image for drawing
-            System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
-            Graphics graphics = Graphics.FromImage(image);
-            Pen pen = new Pen(Color.Cyan, 3);
-
-            foreach (var line in result.Text.Lines)
-            {
-                // Return the text detected in the image
-
-
-
-            }
-
-            // Save image
-            String output_file = "text.jpg";
-            image.Save(output_file);
-            Console.WriteLine("\nResults saved in " + output_file + "\n");   
+            // Return the text detected in the image
+    
+    
         }
+            
+        // Save image
+        String output_file = "text.jpg";
+        image.Save(output_file);
+        Console.WriteLine("\nResults saved in " + output_file + "\n");   
     }
+    ```
+    
+    **Python**
+    
+    ```Python
+    # Use Analyze image function to read text in image
+    result = cv_client.analyze(
+        image_data=image_data,
+        visual_features=[VisualFeatures.READ]
+    )
 
-}  
-```
-
-**Python**
-
-```Python
-# Use Analyze image function to read text in image
-print('Reading text in {}\n'.format(image_file))
-
-analysis_options = sdk.ImageAnalysisOptions()
-
-features = analysis_options.features = (
-    # Specify the features to be retrieved
-
-
-)
-
-# Get image analysis
-image = sdk.VisionSource(image_file)
-
-image_analyzer = sdk.ImageAnalyzer(cv_client, image, analysis_options)
-
-result = image_analyzer.analyze()
-
-if result.reason == sdk.ImageAnalysisResultReason.ANALYZED:
-
-    # Get image captions
-    if result.text is not None:
+    # Display the image and overlay it with the extracted text
+    if result.read is not None:
         print("\nText:")
 
         # Prepare image for drawing
@@ -200,207 +175,186 @@ if result.reason == sdk.ImageAnalysisResultReason.ANALYZED:
         draw = ImageDraw.Draw(image)
         color = 'cyan'
 
-        for line in result.text.lines:
+        for line in result.read.blocks[0].lines:
             # Return the text detected in the image
 
-
-
+            
         # Save image
         plt.imshow(image)
         plt.tight_layout(pad=0)
         outputfile = 'text.jpg'
         fig.savefig(outputfile)
         print('\n  Results saved in', outputfile)
-```
-
-5. 现在已经添加了 **GetTextRead** 函数的主体，在注释**指定要检索的特征**下，添加以下代码以指定要检索文本：
-
-**C#**
-
-```C#
-// Specify features to be retrieved
-Features =
-    ImageAnalysisFeature.Text
-```
-
-**Python**
-
-```Python
-# Specify features to be retrieved
-sdk.ImageAnalysisFeature.TEXT
-```
-
-7. 在 Visual Studio Code 的代码文件中，找到 **GetTextRead** 函数，在**返回图像中检测到的文本**注释下，添加以下代码（此代码会将图像文本打印到控制台，并生成突出显示图像文本的图像 **text.jpg**）：
-
-**C#**
-
-```C#
-// Return the text detected in the image
-Console.WriteLine(line.Content);
-
-var drawLinePolygon = true;
-
-// Return each line detected in the image and the position bounding box around each line
-
-
-
-// Return each word detected in the image and the position bounding box around each word with the confidence level of each word
-
-
-
-// Draw line bounding polygon
-if (drawLinePolygon)
-{
-    var r = line.BoundingPolygon;
-
-    Point[] polygonPoints = {
-        new Point(r[0].X, r[0].Y),
-        new Point(r[1].X, r[1].Y),
-        new Point(r[2].X, r[2].Y),
-        new Point(r[3].X, r[3].Y)
-    };
-
-    graphics.DrawPolygon(pen, polygonPoints);
-}
-```
-
-**Python**
-
-```Python
-# Return the text detected in the image
-print(line.content)    
-
-drawLinePolygon = True
-
-r = line.bounding_polygon
-bounding_polygon = ((r[0], r[1]),(r[2], r[3]),(r[4], r[5]),(r[6], r[7]))
-
-# Return each line detected in the image and the position bounding box around each line
-
-
-
-# Return each word detected in the image and the position bounding box around each word with the confidence level of each word
-
-
-
-# Draw line bounding polygon
-if drawLinePolygon:
-    draw.polygon(bounding_polygon, outline=color, width=3)
-```
-
-8. 在 **read-text/images** 文件夹中，选择 **Lincoln.jpg** 以查看代码将处理的文件。
-
-9. 在应用程序的代码文件中，在 **Main** 函数中检查用户选择菜单选项 **1** 时运行的代码。 此代码会调用 **GetTextRead** 函数并传递*Lincoln.jpg*图像文件的路径。
-
-10. 保存你的更改并返回到 **read-text** 文件夹的集成终端，然后输入以下命令以运行程序：
-
-**C#**
-
-```
-dotnet run
-```
-
-**Python**
-
-```
-python read-text.py
-```
-
-11. 在出现提示时输入 **1** 并观察输出，该输出是从图像中提取的文本。
-
-12. 在 **read-text** 文件夹中，选择 **text.jpg** 图像，注意每*行*文字周围都有一个多边形。
-
-13. 返回 Visual Studio Code 中的代码文件，找到注释**返回图像中检测到的每一行以及每一行周围的位置边界框**。 然后，在该注释下添加以下代码：
-
-**C#**
-
-```C#
-// Return each line detected in the image and the position bounding box around each line
-string pointsToString = "{" + string.Join(',', line.BoundingPolygon.Select(pointsToString => pointsToString.ToString())) + "}";
-Console.WriteLine($"   Line: '{line.Content}', Bounding Polygon {pointsToString}");
-```
-
-**Python**
-
-```Python
-# Return each line detected in the image and the position bounding box around each line
-print(" Line: '{}', Bounding Polygon: {}".format(line.content, bounding_polygon))
-```
-
-14. 保存你的更改并返回到 **read-text** 文件夹的集成终端，然后输入以下命令以运行程序：
-
-**C#**
-
-```
-dotnet run
-```
-
-**Python**
-
-```
-python read-text.py
-```
-
-15. 出现提示时，输入 **1** 并观察输出，输出应该是图像中的每一行文本及其在图像中的相应位置。
-
-
-16. 返回 Visual Studio Code 中的代码文件，找到注释**返回图像中检测到的每个单词，以及每个单词周围的位置边框和每个单词的置信度**。 然后，在该注释下添加以下代码：
-
-**C#**
-
-```C#
-// Return each word detected in the image and the position bounding box around each word with the confidence level of each word
-foreach (var word in line.Words)
-{
-    pointsToString = "{" + string.Join(',', word.BoundingPolygon.Select(pointsToString => pointsToString.ToString())) + "}";
-    Console.WriteLine($"     Word: '{word.Content}', Bounding polygon {pointsToString}, Confidence {word.Confidence:0.0000}");
-
-    // Draw word bounding polygon
-    drawLinePolygon = false;
-    var r = word.BoundingPolygon;
-
-    Point[] polygonPoints = {
-        new Point(r[0].X, r[0].Y),
-        new Point(r[1].X, r[1].Y),
-        new Point(r[2].X, r[2].Y),
-        new Point(r[3].X, r[3].Y)
-    };
-
-    graphics.DrawPolygon(pen, polygonPoints);
-}
-```
-
-**Python**
-
-```Python
-# Return each word detected in the image and the position bounding box around each word with the confidence level of each word
-for word in line.words:
-    r = word.bounding_polygon
-    bounding_polygon = ((r[0], r[1]),(r[2], r[3]),(r[4], r[5]),(r[6], r[7]))
-    print("  Word: '{}', Bounding Polygon: {}, Confidence: {}".format(word.content, bounding_polygon,word.confidence))
-
-    # Draw word bounding polygon
-    drawLinePolygon = False
-    draw.polygon(bounding_polygon, outline=color, width=3)
-```
-
-17. 保存你的更改并返回到 **read-text** 文件夹的集成终端，然后输入以下命令以运行程序：
-
-**C#**
-
-```
-dotnet run
-```
-
-**Python**
-
-```
-python read-text.py
-```
-
-18. 出现提示时，输入 **1** 并观察输出结果，即图像中的每个文本单词及其在图像中的相应位置。 注意每个单词的置信度也会返回。
-
-19. 在 **read-text** 文件夹中，选择 **text.jpg** 图像，注意每个*单词*周围都有一个多边形。
+    ```
+
+5. 在刚刚添加到 **GetTextRead** 函数的代码中，在**返回图像中检测到的文本**注释下，添加以下代码（此代码会将图像文本输出到控制台并生成 **text.jpg**，它会突出显示图像的文本）：
+
+    **C#**
+    
+    ```C#
+    // Return the text detected in the image
+    Console.WriteLine($"   '{line.Text}'");
+    
+    // Draw bounding box around line
+    var drawLinePolygon = true;
+    
+    // Return each line detected in the image and the position bounding box around each line
+    
+    
+    
+    // Return each word detected in the image and the position bounding box around each word with the confidence level of each word
+    
+    
+    
+    // Draw line bounding polygon
+    if (drawLinePolygon)
+    {
+        var r = line.BoundingPolygon;
+    
+        Point[] polygonPoints = {
+            new Point(r[0].X, r[0].Y),
+            new Point(r[1].X, r[1].Y),
+            new Point(r[2].X, r[2].Y),
+            new Point(r[3].X, r[3].Y)
+        };
+    
+        graphics.DrawPolygon(pen, polygonPoints);
+    }
+    ```
+    
+    **Python**
+    
+    ```Python
+    # Return the text detected in the image
+    print(f"  {line.text}")    
+    
+    drawLinePolygon = True
+    
+    r = line.bounding_polygon
+    bounding_polygon = ((r[0].x, r[0].y),(r[1].x, r[1].y),(r[2].x, r[2].y),(r[3].x, r[3].y))
+    
+    # Return the position bounding box around each line
+    
+    
+    # Return each word detected in the image and the position bounding box around each word with the confidence level of each word
+    
+    
+    # Draw line bounding polygon
+    if drawLinePolygon:
+        draw.polygon(bounding_polygon, outline=color, width=3)
+    ```
+
+6. 在 **read-text/images** 文件夹中，选择 **Lincoln.jpg** 以查看代码将处理的文件。
+
+7. 在应用程序的代码文件中，在 **Main** 函数中检查用户选择菜单选项 **1** 时运行的代码。 此代码会调用 **GetTextRead** 函数并传递*Lincoln.jpg*图像文件的路径。
+
+8. 保存你的更改并返回到 **read-text** 文件夹的集成终端，然后输入以下命令以运行程序：
+
+    **C#**
+    
+    ```
+    dotnet run
+    ```
+    
+    **Python**
+    
+    ```
+    python read-text.py
+    ```
+
+9. 在出现提示时输入 **1** 并观察输出，该输出是从图像中提取的文本。
+
+10. 在 **read-text** 文件夹中，选择 **text.jpg** 图像，注意每*行*文字周围都有一个多边形。
+
+11. 返回到 Visual Studio Code 中的代码文件，并找到注释**返回每行周围的位置边界框**。 然后，在该注释下添加以下代码：
+
+    **C#**
+    
+    ```C#
+    // Return the position bounding box around each line
+    Console.WriteLine($"   Bounding Polygon: [{string.Join(" ", line.BoundingPolygon)}]");  
+    ```
+    
+    **Python**
+    
+    ```Python
+    # Return the position bounding box around each line
+    print("   Bounding Polygon: {}".format(bounding_polygon))
+    ```
+
+12. 保存你的更改并返回到 **read-text** 文件夹的集成终端，然后输入以下命令以运行程序：
+
+    **C#**
+    
+    ```
+    dotnet run
+    ```
+    
+    **Python**
+    
+    ```
+    python read-text.py
+    ```
+
+13. 出现提示时，输入 **1** 并观察输出，输出应该是图像中的每一行文本及其在图像中的相应位置。
+
+
+14. 返回 Visual Studio Code 中的代码文件，找到注释**返回图像中检测到的每个单词，以及每个单词周围的位置边框和每个单词的置信度**。 然后，在该注释下添加以下代码：
+
+    **C#**
+    
+    ```C#
+    // Return each word detected in the image and the position bounding box around each word with the confidence level of each word
+    foreach (DetectedTextWord word in line.Words)
+    {
+        Console.WriteLine($"     Word: '{word.Text}', Confidence {word.Confidence:F4}, Bounding Polygon: [{string.Join(" ", word.BoundingPolygon)}]");
+        
+        // Draw word bounding polygon
+        drawLinePolygon = false;
+        var r = word.BoundingPolygon;
+    
+        Point[] polygonPoints = {
+            new Point(r[0].X, r[0].Y),
+            new Point(r[1].X, r[1].Y),
+            new Point(r[2].X, r[2].Y),
+            new Point(r[3].X, r[3].Y)
+        };
+    
+        graphics.DrawPolygon(pen, polygonPoints);
+    }
+    ```
+    
+    **Python**
+    
+    ```Python
+    # Return each word detected in the image and the position bounding box around each word with the confidence level of each word
+    for word in line.words:
+        r = word.bounding_polygon
+        bounding_polygon = ((r[0].x, r[0].y),(r[1].x, r[1].y),(r[2].x, r[2].y),(r[3].x, r[3].y))
+        print(f"    Word: '{word.text}', Bounding Polygon: {bounding_polygon}, Confidence: {word.confidence:.4f}")
+    
+        # Draw word bounding polygon
+        drawLinePolygon = False
+        draw.polygon(bounding_polygon, outline=color, width=3)
+    ```
+
+15. 保存你的更改并返回到 **read-text** 文件夹的集成终端，然后输入以下命令以运行程序：
+
+    **C#**
+    
+    ```
+    dotnet run
+    ```
+    
+    **Python**
+    
+    ```
+    python read-text.py
+    ```
+
+16. 出现提示时，输入 **1** 并观察输出结果，即图像中的每个文本单词及其在图像中的相应位置。 注意每个单词的置信度也会返回。
+
+17. 在 **read-text** 文件夹中，选择 **text.jpg** 图像，注意每个*单词*周围都有一个多边形。
 
 ## 使用 Azure AI Vision SDK 从图像中读取手写文本
 
@@ -412,17 +366,17 @@ python read-text.py
 
 3. 在 **read-text **文件夹的集成终端中，输入以下命令以运行程序：
 
-**C#**
-
-```
-dotnet run
-```
-
-**Python**
-
-```
-python read-text.py
-```
+    **C#**
+    
+    ```
+    dotnet run
+    ```
+    
+    **Python**
+    
+    ```
+    python read-text.py
+    ```
 
 4. 出现提示时，输入 **2** 并观察输出结果，即从注释图像中提取的文本。
 
@@ -440,4 +394,4 @@ python read-text.py
 
 ## 详细信息
 
-有关使用 **Azure AI 视觉** 服务读取文本的详细信息，请参阅 [Azure AI Vision 文档](https://learn.microsoft.com/azure/ai-services/computer-vision/overview-ocr)。
+有关使用 **Azure AI 视觉** 服务读取文本的详细信息，请参阅 [Azure AI Vision 文档](https://learn.microsoft.com/azure/ai-services/computer-vision/concept-ocr)。
