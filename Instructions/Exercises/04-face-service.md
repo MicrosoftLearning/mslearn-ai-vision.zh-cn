@@ -1,14 +1,16 @@
 ---
 lab:
   title: 检测和分析人脸
-  module: 'Module 10 - Detecting, Analyzing, and Recognizing Faces'
+  module: Module 4 - Detecting and Analyze Faces
 ---
 
 # 检测和分析人脸
 
 检测和分析人脸的能力是一项核心 AI 功能。 在此练习中，你将探索两个可用于处理图像中的人脸的 Azure AI 服务：**Azure AI 视觉**服务和**人脸**服务。
 
-> **注意**：从 2022 年 6 月 21 日开始，返回个人身份信息的 Azure AI 服务的功能仅限于被授予[有限访问权限](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-limited-access)的客户。 此外，推断情绪状态的功能不再可用。 这些限制可能会影响本实验室练习。 我们正在努力解决此问题，但与此同时，执行以下步骤时可能会遇到一些错误；对此我们深表歉意。 有关 Microsoft 所做的更改的更多详细信息，以及原因 - 请参阅[负责任 AI 投资和面部识别防护措施](https://azure.microsoft.com/blog/responsible-ai-investments-and-safeguards-for-facial-recognition/)。
+> **重要说明**：无需请求对受限功能进行任何额外访问即可完成此实验室。
+
+> **注意**：从 2022 年 6 月 21 日开始，返回个人身份信息的 Azure AI 服务的功能仅限于被授予[有限访问权限](https://docs.microsoft.com/azure/cognitive-services/cognitive-services-limited-access)的客户。 此外，推断情绪状态的功能不再可用。 有关 Microsoft 所做的更改的更多详细信息，以及原因 - 请参阅[负责任 AI 投资和面部识别防护措施](https://azure.microsoft.com/blog/responsible-ai-investments-and-safeguards-for-facial-recognition/)。
 
 ## 克隆本课程的存储库
 
