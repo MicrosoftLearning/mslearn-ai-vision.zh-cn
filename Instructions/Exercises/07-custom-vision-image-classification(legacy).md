@@ -1,7 +1,6 @@
 ---
 lab:
-  title: 使用 Azure AI 自定义视觉对图像进行分类
-  module: Module 9 - Developing Custom Vision Solutions
+  title: 使用 Azure AI 自定义视觉对图像进行分类（旧版）
 ---
 
 # 使用 Azure AI 自定义视觉对图像进行分类
@@ -15,7 +14,7 @@ lab:
 如果尚未将 **mslearn-ai-vision** 代码存储库克隆到你要在此实验室中使用的环境，请按照以下步骤克隆它。 否则，请在 Visual Studio Code 中打开克隆的文件夹。
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行**Git：克隆**命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -31,7 +30,7 @@ lab:
 2. 选择 **&#65291;创建资源**按钮，搜索*自定义视觉*，并使用以下设置创建一个**自定义视觉**资源：
     - **创建选项**：共同点
     - **订阅**：*Azure 订阅*
-    - **资源组**：*选择或创建一个资源组（如果你使用的是受限订阅，则可能无权创建新资源组，在此情况下，可使用一个已提供的资源组）*
+    - **资源组**：*选择或创建一个资源组（如果使用受限制的订阅，你可能无权创建新的资源组 - 请使用提供的资源组）*
     - **区域**：*选择任何可用区域*
     - **名称**：*输入唯一名称*
     - **训练定价层**：F0
