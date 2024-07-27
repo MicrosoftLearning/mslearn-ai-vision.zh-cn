@@ -473,9 +473,9 @@ body = {
 response = requests.post(url, headers=headers, json=body)
 
 image=response.content
-with open("backgroundForeground.png", "wb") as file:
+with open("background.png", "wb") as file:
     file.write(image)
-print('  Results saved in backgroundForeground.png \n')
+print('  Results saved in background.png \n')
 ```
     
 2. 保存更改，并针对 **images** 文件夹中的每个图像文件运行一次程序，以打开在每张图像的代码文件所在同一文件夹中生成的 **background.jpg** 文件。  请注意，每张图片的背景都已去除。
