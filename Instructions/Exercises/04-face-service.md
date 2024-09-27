@@ -50,13 +50,13 @@ lab:
     **C#**
 
     ```
-    dotnet add package Azure.AI.Vision.ImageAnalysis -v 0.15.1-beta.1
+    dotnet add package Azure.AI.Vision.ImageAnalysis -v 1.0.0-beta.3
     ```
 
     **Python**
 
     ```
-    pip install azure-ai-vision==0.15.1b1
+    pip install azure-ai-vision==1.0.0b3
     ```
     
 3. 查看 **computer-vision** 文件夹的内容，并注意其中包含一个配置设置文件：
@@ -75,8 +75,7 @@ lab:
     **C#**
 
     ```C#
-    // import namespaces
-    using Azure.AI.Vision.Common;
+    // Import namespaces
     using Azure.AI.Vision.ImageAnalysis;
     ```
 
@@ -84,7 +83,9 @@ lab:
 
     ```Python
     # import namespaces
-    import azure.ai.vision as sdk
+    from azure.ai.vision.imageanalysis import ImageAnalysisClient
+    from azure.ai.vision.imageanalysis.models import VisualFeatures
+    from azure.core.credentials import AzureKeyCredential
     ```
 
 ## 查看要分析的图像
@@ -104,8 +105,8 @@ lab:
 
     ```C#
     // Authenticate Azure AI Vision client
-    var cvClient = new VisionServiceOptions(
-        aiSvcEndpoint,
+    ImageAnalysisClient cvClient = new ImageAnalysisClient(
+        new Uri(aiSvcEndpoint),
         new AzureKeyCredential(aiSvcKey));
     ```
 
@@ -113,136 +114,70 @@ lab:
 
     ```Python
     # Authenticate Azure AI Vision client
-    cv_client = sdk.VisionServiceOptions(ai_endpoint, ai_key)
+    cv_client = ImageAnalysisClient(
+        endpoint=ai_endpoint,
+        credential=AzureKeyCredential(ai_key)
+    )
     ```
 
 2. 在 **Main** 函数中，可在你刚刚添加的代码下看到，代码指定了图像文件的路径，然后将图像路径传递给名为 **AnalyzeImage** 的函数。 此函数尚未完全实现。
 
-3. 在 **AnalyzeImage** 函数的注释**指定要检索的特征**下，添加以下代码：
+3. 在 **AnalyzeImage** 函数中的注释**获取具有要检索的指定特征的结果（人物）** 下，添加以下代码：
 
     **C#**
 
     ```C#
-    // Specify features to be retrieved (PEOPLE)
-    Features =
-        ImageAnalysisFeature.People
+    // Get result with specified features to be retrieved (PEOPLE)
+    ImageAnalysisResult result = client.Analyze(
+        BinaryData.FromStream(stream),
+        VisualFeatures.People);
     ```
 
     **Python**
 
     ```Python
-    # Specify features to be retrieved (PEOPLE)
-    analysis_options = sdk.ImageAnalysisOptions()
-    
-    features = analysis_options.features = (
-        sdk.ImageAnalysisFeature.PEOPLE
-    )    
+    # Get result with specified features to be retrieved (PEOPLE)
+    result = cv_client.analyze(
+        image_data=image_data,
+        visual_features=[
+            VisualFeatures.PEOPLE],
+    )
     ```
 
-4. 在 **AnalyzeImage** 函数的注释**获取图像分析**下，添加以下代码：
+4. 在 **AnalyzeImage** 函数中的注释**在检测到的人物周围绘制边界框**下，添加以下代码：
 
     **C#**
 
     ```C
-    // Get image analysis
-    using var imageSource = VisionSource.FromFile(imageFile);
-    
-    using var analyzer = new ImageAnalyzer(serviceOptions, imageSource, analysisOptions);
-    
-    var result = analyzer.Analyze();
-    
-    if (result.Reason == ImageAnalysisResultReason.Analyzed)
+    // Draw bounding box around detected people
+    foreach (DetectedPerson person in result.People.Values)
     {
-        // Get people in the image
-        if (result.People != null)
+        if (person.Confidence > 0.5) 
         {
-            Console.WriteLine($" People:");
-        
-            // Prepare image for drawing
-            System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
-            Graphics graphics = Graphics.FromImage(image);
-            Pen pen = new Pen(Color.Cyan, 3);
-            Font font = new Font("Arial", 16);
-            SolidBrush brush = new SolidBrush(Color.WhiteSmoke);
-        
-            foreach (var person in result.People)
-            {
-                // Draw object bounding box if confidence > 50%
-                if (person.Confidence > 0.5)
-                {
-                    // Draw object bounding box
-                    var r = person.BoundingBox;
-                    Rectangle rect = new Rectangle(r.X, r.Y, r.Width, r.Height);
-                    graphics.DrawRectangle(pen, rect);
-        
-                    // Return the confidence of the person detected
-                    Console.WriteLine($"   Bounding box {person.BoundingBox}, Confidence {person.Confidence:0.0000}");
-                }
-            }
-        
-            // Save annotated image
-            String output_file = "detected_people.jpg";
-            image.Save(output_file);
-            Console.WriteLine("  Results saved in " + output_file + "\n");
+            // Draw object bounding box
+            var r = person.BoundingBox;
+            Rectangle rect = new Rectangle(r.X, r.Y, r.Width, r.Height);
+            graphics.DrawRectangle(pen, rect);
         }
+
+        // Return the confidence of the person detected
+        //Console.WriteLine($"   Bounding box {person.BoundingBox.ToString()}, Confidence: {person.Confidence:F2}");
     }
-    else
-    {
-        var errorDetails = ImageAnalysisErrorDetails.FromResult(result);
-        Console.WriteLine(" Analysis failed.");
-        Console.WriteLine($"   Error reason : {errorDetails.Reason}");
-        Console.WriteLine($"   Error code : {errorDetails.ErrorCode}");
-        Console.WriteLine($"   Error message: {errorDetails.Message}\n");
-    }
-    
     ```
 
     **Python**
     
     ```Python
-    # Get image analysis
-    image = sdk.VisionSource(image_file)
-    
-    image_analyzer = sdk.ImageAnalyzer(cv_client, image, analysis_options)
-    
-    result = image_analyzer.analyze()
-    
-    if result.reason == sdk.ImageAnalysisResultReason.ANALYZED:
-        # Get people in the image
-        if result.people is not None:
-            print("\nPeople in image:")
-        
-            # Prepare image for drawing
-            image = Image.open(image_file)
-            fig = plt.figure(figsize=(image.width/100, image.height/100))
-            plt.axis('off')
-            draw = ImageDraw.Draw(image)
-            color = 'cyan'
-        
-            for detected_people in result.people:
-                # Draw object bounding box if confidence > 50%
-                if detected_people.confidence > 0.5:
-                    # Draw object bounding box
-                    r = detected_people.bounding_box
-                    bounding_box = ((r.x, r.y), (r.x + r.w, r.y + r.h))
-                    draw.rectangle(bounding_box, outline=color, width=3)
-            
-                    # Return the confidence of the person detected
-                    print(" {} (confidence: {:.2f}%)".format(detected_people.bounding_box, detected_people.confidence * 100))
-                    
-            # Save annotated image
-            plt.imshow(image)
-            plt.tight_layout(pad=0)
-            outputfile = 'detected_people.jpg'
-            fig.savefig(outputfile)
-            print('  Results saved in', outputfile)
-    
-    else:
-        error_details = sdk.ImageAnalysisErrorDetails.from_result(result)
-        print(" Analysis failed.")
-        print("   Error reason: {}".format(error_details.reason))
-        print("   Error code: {}".format(error_details.error_code))
-        print("   Error message: {}".format(error_details.message))
+    # Draw bounding box around detected people
+    for detected_people in result.people.list:
+        if(detected_people.confidence > 0.5):
+            # Draw object bounding box
+            r = detected_people.bounding_box
+            bounding_box = ((r.x, r.y), (r.x + r.width, r.y + r.height))
+            draw.rectangle(bounding_box, outline=color, width=3)
+
+        # Return the confidence of the person detected
+        #print(" {} (confidence: {:.2f}%)".format(detected_people.bounding_box, detected_people.confidence * 100))
     ```
 
 5. 保存你的更改并返回到 **computer-vision** 文件夹的集成终端，然后输入以下命令以运行程序：
@@ -260,7 +195,9 @@ lab:
     ```
 
 6. 查看输出，它应该会指出检测到的人脸数。
-7. 查看在代码文件所在的同一文件夹中生成的 **detected_people.jpg** 文件，以查看带有批注的人脸。 本例的代码使用人脸特征来标记框左上角的位置，并使用边界框坐标来绘制框住每张人脸的矩形。
+7. 查看在代码文件所在的同一文件夹中生成的 **people.jpg** 文件，以查看带有批注的人脸。 本例的代码使用人脸特征来标记框左上角的位置，并使用边界框坐标来绘制框住每张人脸的矩形。
+
+如果希望看到该服务检测到的所有人员的置信度分数，可以在注释 `Return the confidence of the person detected` 下取消注释代码行并重新运行代码。
 
 ## 准备使用人脸 SDK
 
@@ -477,7 +414,7 @@ with open(image_file, mode="rb") as image_data:
     dotnet run
     ```
 
-    *C# 输出可能显示有关异步函数在使用 **await** 运算符的警告。可以忽略这些警告。*
+    *C# 输出可能显示有关异步函数未使用 **await** 运算符的警告。可以忽略这些警告。*
 
     **Python**
 
