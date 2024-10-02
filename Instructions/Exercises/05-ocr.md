@@ -49,7 +49,7 @@ lab:
     **C#**
     
     ```
-    dotnet add package Azure.AI.Vision.ImageAnalysis -v 1.0.0-beta.1
+    dotnet add package Azure.AI.Vision.ImageAnalysis -v 1.0.0-beta.3
     ```
 
     > **注意**：如果提示您安装开发工具包扩展，您可以安全关闭该消息。
@@ -57,7 +57,7 @@ lab:
     **Python**
     
     ```
-    pip install azure-ai-vision-imageanalysis==1.0.0b1
+    pip install azure-ai-vision-imageanalysis==1.0.0b3
     ```
 
 3. 查看 **read-text** 文件夹的内容，并注意其中包含一个配置设置文件：
@@ -70,7 +70,7 @@ lab:
 
 ## 使用 Azure AI Vision SDK 从图像中读取文本
 
-**Azure AI Vision SDK** 的功能之一是从图像中读取文本。 在此练习中，你将完成一个已部分实现的客户端应用程序，该应用程序使用 Azure AI 视觉 SDK 从图像中读取文本。
+**Azure AI 视觉 SDK** 的其中一项功能是从图像中读取文本。 在此练习中，你将完成一个已部分实现的客户端应用程序，该应用程序使用 Azure AI 视觉 SDK 从图像中读取文本。
 
 1. **读取文本**文件夹包含客户端应用程序的代码文件：
 
