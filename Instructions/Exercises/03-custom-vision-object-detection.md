@@ -1,10 +1,9 @@
 ---
 lab:
-  title: 使用自定义视觉检测图像中的对象
-  module: Module 9 - Developing Custom Vision Solutions
+  title: 使用 Azure AI 自定义视觉检测图像中的对象
 ---
 
-# 使用自定义视觉检测图像中的对象
+# 使用 Azure AI 自定义视觉检测图像中的对象
 
 在此练习中，你将使用自定义视觉服务来训练*对象检测*模型，该模型可检测并找到图像中的三种水果（苹果、香蕉和橙子）。
 
@@ -21,7 +20,9 @@ lab:
 
 ## 创建自定义视觉资源
 
-如果 Azure 订阅中已有用于训练和预测的**自定义视觉**资源，则可以在此练习中使用。 如果没有，请按照以下说明来创建自定义视觉资源。
+如果 Azure 订阅中已有用于训练和预测的“**自定义视觉**”资源，则可以在此练习中使用它们或某个现有的多服务帐户。 如果没有，请按照以下说明来创建自定义视觉资源。
+
+> **备注**：如果使用多服务帐户，则训练和预测的密钥和终结点将相同。
 
 1. 在新的浏览器标签页中，打开 Azure 门户 (`https://portal.azure.com`)，然后使用与 Azure 订阅关联的 Microsoft 帐户登录。
 2. 选择 **&#65291;创建资源**按钮，搜索*自定义视觉*，并使用以下设置创建一个**自定义视觉**资源：
@@ -61,27 +62,27 @@ lab:
 3. 上传图像后，选择第一个图像将其打开。
 4. 将鼠标悬停在图像中的任意对象上，直到自动检测到的区域如下图所示。 然后选择对象，并根据需要调整区域大小以将其环绕。
 
-![对象的默认区域](../media/object-region.jpg)
+    ![对象的默认区域](../media/object-region.jpg)
 
-或者，只需在对象周围拖动以创建区域。
+    或者，只需在对象周围拖动以创建区域。
 
 5. 当区域环绕对象时，使用相应的对象类型（*苹果*、*香蕉*或*橘子*）添加新标记，如下所示：
 
-![图像中的已标记对象](../media/object-tag.jpg)
+    ![图像中的已标记对象](../media/object-tag.jpg)
 
 6. 选择并标记图像中的各个对象，从而根据需要调整区域大小并添加新标记。
 
-![图像中的两个已标记对象](../media/object-tags.jpg)
+    ![图像中的两个已标记对象](../media/object-tags.jpg)
 
 7. 使用右侧的 **>** 链接转到下一个图像，并标记其对象。 然后，继续处理整个图像集合，标记每个苹果、香蕉和橘子。
 
-8. 标记完最后一个图像后，关闭**图像详细信息**编辑器，在**训练图像**页上的**标记**下，选择**已标记**以查看所有已标记的图像：
+8. 标记完最后一个图像后，请关闭“**图像详细信息**”编辑器。 在“**训练图像**”页的“**标记**”下，选择“**已标记**”以查看所有标记的图像：
 
 ![项目中的已标记图像](../media/tagged-images.jpg)
 
 ## 使用训练 API 上传图像
 
-可以使用自定义视觉门户中的图形工具对图像进行标记，但许多 AI 开发团队使用的是其他工具，这些工具会生成文件，其中包含与图像中的标记和对象区域相关的信息。 在此类情况下，可以使用自定义视觉训练 API 将带标记的图像上传到项目。
+可以使用“自定义视觉”门户中的 UI 对图像进行标记，但许多 AI 开发团队会使用其他工具来生成包含有关图像中的标记和对象区域信息的文件。 在此类情况下，可以使用自定义视觉训练 API 将带标记的图像上传到项目。
 
 > **注意**：在此练习中，可以选择在 **C#** 或 **Python** SDK 中使用 API。 在下面的步骤中，请执行适用于你的语言首选项的操作。
 
@@ -100,7 +101,7 @@ dotnet add package Microsoft.Azure.CognitiveServices.Vision.CustomVision.Trainin
 **Python**
 
 ```
-pip install azure-cognitiveservices-vision-customvision==3.1.0
+pip install azure-cognitiveservices-vision-customvision==3.1.1
 ```
 
 6. 查看 **train-detector** 文件夹的内容，并注意其中包含一个配置设置文件：
@@ -115,7 +116,6 @@ pip install azure-cognitiveservices-vision-customvision==3.1.0
 
 8. 请注意，**train-detector** 文件夹中包含子文件夹，其中存储了 JSON 文件中引用的图像文件。
 
-
 9. 请注意，**train-detector** 文件夹中包含客户端应用程序的代码文件：
 
     - **C#** ：Program.cs
@@ -125,26 +125,27 @@ pip install azure-cognitiveservices-vision-customvision==3.1.0
     - 已导入你安装的包中的命名空间
     - **Main** 函数检索配置设置，并使用密钥和终结点来创建经过身份验证的 **CustomVisionTrainingClient**，然后将其与**项目** ID 结合使用以创建对项目的项目引用。
     - **Upload_Images** 函数从 JSON 文件提取带标记的区域信息，并按照该信息创建一批具有区域的图像，然后将其上传到项目。
+
 10. 返回 **train-detector** 文件夹的集成终端，然后输入以下命令以运行程序：
     
-**C#**
-
-```
-dotnet run
-```
-
-**Python**
-
-```
-python train-detector.py
-```
+    **C#**
+    
+    ```
+    dotnet run
+    ```
+    
+    **Python**
+    
+    ```
+    python train-detector.py
+    ```
     
 11. 等待程序结束。 然后返回到浏览器，并在自定义视觉门户中查看项目的**训练图像**页面（如有必要，请刷新浏览器）。
 12. 验证某些带标记的新图像是否已添加到项目中。
 
 ## 训练和测试模型
 
-现在你已标记项目中的图像，即可训练模型。
+现在你已标记项目中的图像，即可训练模型。 大家
 
 1. 在自定义视觉项目中，单击**训练**以使用已标记的图像训练对象检测模型。 选择**快速训练**选项。
 2. 等待训练完成（可能需要 10 分钟左右），然后检查*精度*、*召回*率和 *mAP* 性能指标 - 这些指标用于衡量分类模型的预测准确度，且应该都很高。
@@ -176,7 +177,7 @@ dotnet add package Microsoft.Azure.CognitiveServices.Vision.CustomVision.Predict
 **Python**
 
 ```
-pip install azure-cognitiveservices-vision-customvision==3.1.0
+pip install azure-cognitiveservices-vision-customvision==3.1.1
 ```
 
 > **注意**：Python SDK 包包括训练和预测包，并且可能已安装完毕。
