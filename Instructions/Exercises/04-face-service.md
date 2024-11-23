@@ -56,7 +56,7 @@ lab:
     **Python**
 
     ```
-    pip install azure-ai-vision==1.0.0b3
+    pip install azure-ai-vision-imageanalysis==1.0.0b3
     ```
     
 3. 查看 **computer-vision** 文件夹的内容，并注意其中包含一个配置设置文件：
@@ -209,13 +209,13 @@ lab:
     **C#**
 
     ```
-    dotnet add package Microsoft.Azure.CognitiveServices.Vision.Face --version 2.8.0-preview.3
+    dotnet add package Azure.AI.Vision.Face -v 1.0.0-beta.2
     ```
 
     **Python**
 
     ```
-    pip install azure-cognitiveservices-vision-face==0.6.0
+    pip install azure-ai-vision-face==1.0.0b2
     ```
     
 3. 查看 **face-api** 文件夹的内容，并注意其中包含一个配置设置文件：
@@ -235,17 +235,17 @@ lab:
 
     ```C#
     // Import namespaces
-    using Microsoft.Azure.CognitiveServices.Vision.Face;
-    using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
+    using Azure;
+    using Azure.AI.Vision.Face;
     ```
 
     **Python**
 
     ```Python
     # Import namespaces
-    from azure.cognitiveservices.vision.face import FaceClient
-    from azure.cognitiveservices.vision.face.models import FaceAttributeType
-    from msrest.authentication import CognitiveServicesCredentials
+    from azure.ai.vision.face import FaceClient
+    from azure.ai.vision.face.models import FaceDetectionModel, FaceRecognitionModel, FaceAttributeTypeDetection03
+    from azure.core.credentials import AzureKeyCredential
     ```
 
 7. 请注意，**Main** 函数中已提供用于加载配置设置的代码。 然后查找注释**对人脸客户端进行身份验证**。 然后在此注释下添加以下特定于语言的代码，以创建 **FaceClient** 对象并对其进行身份验证：
@@ -254,26 +254,26 @@ lab:
 
     ```C#
     // Authenticate Face client
-    ApiKeyServiceClientCredentials credentials = new ApiKeyServiceClientCredentials(cogSvcKey);
-    faceClient = new FaceClient(credentials)
-    {
-        Endpoint = cogSvcEndpoint
-    };
+    faceClient = new FaceClient(
+        new Uri(cogSvcEndpoint),
+        new AzureKeyCredential(cogSvcKey));
     ```
 
     **Python**
 
     ```Python
     # Authenticate Face client
-    credentials = CognitiveServicesCredentials(cog_key)
-    face_client = FaceClient(cog_endpoint, credentials)
+    face_client = FaceClient(
+        endpoint=cog_endpoint,
+        credential=AzureKeyCredential(cog_key)
+    )
     ```
 
 8. 在 **Main** 函数中，可在你刚刚添加的代码下看到，代码显示了一个菜单，可通过该菜单调用代码中的函数以探索人脸服务的功能。 你将在此练习的剩余部分中实现这些函数。
 
 ## 检测和分析人脸
 
-人脸服务最基本的功能之一是检测图像中的人脸并确定其特征（例如头部姿态、模糊、是否佩戴眼镜等等）。
+人脸服务最基本的功能之一是检测图像中的人脸并确定其特征（例如头部姿势、模糊、是否佩戴口罩等）。
 
 1. 在应用程序的代码文件中，在 **Main** 函数中检查用户选择菜单选项 **1** 时运行的代码。 此代码会调用 **DetectFaces** 函数并传递图像文件的路径。
 2. 在代码文件中查找 **DetectFaces** 函数，并在注释**指定要检索的面部特征**下添加以下代码：
@@ -282,11 +282,11 @@ lab:
 
     ```C#
     // Specify facial features to be retrieved
-    IList<FaceAttributeType> features = new FaceAttributeType[]
+    FaceAttributeType[] features = new FaceAttributeType[]
     {
-        FaceAttributeType.Occlusion,
-        FaceAttributeType.Blur,
-        FaceAttributeType.Glasses
+        FaceAttributeType.Detection03.HeadPose,
+        FaceAttributeType.Detection03.Blur,
+        FaceAttributeType.Detection03.Mask
     };
     ```
 
@@ -294,20 +294,26 @@ lab:
 
     ```Python
     # Specify facial features to be retrieved
-    features = [FaceAttributeType.occlusion,
-                FaceAttributeType.blur,
-                FaceAttributeType.glasses]
+    features = [FaceAttributeTypeDetection03.HEAD_POSE,
+                FaceAttributeTypeDetection03.BLUR,
+                FaceAttributeTypeDetection03.MASK]
     ```
 
 3. 在 **DetectFaces** 函数中刚刚添加的代码下，查找注释**获取人脸**并添加以下代码：
 
 **C#**
 
-```C
+```C#
 // Get faces
 using (var imageData = File.OpenRead(imageFile))
 {    
-    var detected_faces = await faceClient.Face.DetectWithStreamAsync(imageData, returnFaceAttributes: features, returnFaceId: false);
+    var response = await faceClient.DetectAsync(
+        BinaryData.FromStream(imageData),
+        FaceDetectionModel.Detection03,
+        FaceRecognitionModel.Recognition04,
+        returnFaceId: false,
+        returnFaceAttributes: features);
+    IReadOnlyList<FaceDetectionResult> detected_faces = response.Value;
 
     if (detected_faces.Count() > 0)
     {
@@ -328,10 +334,11 @@ using (var imageData = File.OpenRead(imageFile))
             Console.WriteLine($"\nFace number {faceCount}");
             
             // Get face properties
-            Console.WriteLine($" - Mouth Occluded: {face.FaceAttributes.Occlusion.MouthOccluded}");
-            Console.WriteLine($" - Eye Occluded: {face.FaceAttributes.Occlusion.EyeOccluded}");
+            Console.WriteLine($" - Head Pose (Yaw): {face.FaceAttributes.HeadPose.Yaw}");
+            Console.WriteLine($" - Head Pose (Pitch): {face.FaceAttributes.HeadPose.Pitch}");
+            Console.WriteLine($" - Head Pose (Roll): {face.FaceAttributes.HeadPose.Roll}");
             Console.WriteLine($" - Blur: {face.FaceAttributes.Blur.BlurLevel}");
-            Console.WriteLine($" - Glasses: {face.FaceAttributes.Glasses}");
+            Console.WriteLine($" - Mask: {face.FaceAttributes.Mask.Type}");
 
             // Draw and annotate face
             var r = face.FaceRectangle;
@@ -354,8 +361,13 @@ using (var imageData = File.OpenRead(imageFile))
 ```Python
 # Get faces
 with open(image_file, mode="rb") as image_data:
-    detected_faces = face_client.face.detect_with_stream(image=image_data,
-                                                            return_face_attributes=features,                     return_face_id=False)
+    detected_faces = face_client.detect(
+        image_content=image_data.read(),
+        detection_model=FaceDetectionModel.DETECTION03,
+        recognition_model=FaceRecognitionModel.RECOGNITION04,
+        return_face_id=False,
+        return_face_attributes=features,
+    )
 
     if len(detected_faces) > 0:
         print(len(detected_faces), 'faces detected.')
@@ -375,19 +387,11 @@ with open(image_file, mode="rb") as image_data:
             face_count += 1
             print('\nFace number {}'.format(face_count))
 
-            detected_attributes = face.face_attributes.as_dict()
-            if 'blur' in detected_attributes:
-                print(' - Blur:')
-                for blur_name in detected_attributes['blur']:
-                    print('   - {}: {}'.format(blur_name, detected_attributes['blur'][blur_name]))
-                    
-            if 'occlusion' in detected_attributes:
-                print(' - Occlusion:')
-                for occlusion_name in detected_attributes['occlusion']:
-                    print('   - {}: {}'.format(occlusion_name, detected_attributes['occlusion'][occlusion_name]))
-
-            if 'glasses' in detected_attributes:
-                print(' - Glasses:{}'.format(detected_attributes['glasses']))
+            print(' - Head Pose (Yaw): {}'.format(face.face_attributes.head_pose.yaw))
+            print(' - Head Pose (Pitch): {}'.format(face.face_attributes.head_pose.pitch))
+            print(' - Head Pose (Roll): {}'.format(face.face_attributes.head_pose.roll))
+            print(' - Blur: {}'.format(face.face_attributes.blur.blur_level))
+            print(' - Mask: {}'.format(face.face_attributes.mask.type))
 
             # Draw and annotate face
             r = face.face_rectangle
@@ -405,7 +409,7 @@ with open(image_file, mode="rb") as image_data:
         print('\nResults saved in', outputfile)
 ```
 
-4. 检查添加到 **DetectFaces** 函数的代码。 该代码分析了图像文件，并检测了其中包含的任何人脸及其特征（遮挡、模糊以及是否佩戴眼镜）。 该代码还会显示每张人脸的详细信息（包括为每张人脸分配的唯一人脸标识符）；并使用边界框在图像上标出了人脸所在的位置。
+4. 检查添加到 **DetectFaces** 函数的代码。 它分析图像文件，并检测其中包含的任何人脸及其特征（头部姿势、模糊以及是否佩戴口罩）。 该代码还会显示每张人脸的详细信息（包括为每张人脸分配的唯一人脸标识符）；并使用边界框在图像上标出了人脸所在的位置。
 5. 保存你的更改并返回到 **face-api** 文件夹的集成终端，然后输入以下命令以运行程序：
 
     **C#**
@@ -431,4 +435,4 @@ with open(image_file, mode="rb") as image_data:
 
 有关使用 **Azure AI 视觉**服务进行面部检测的详细信息，请参阅[Azure AI 视觉文档](https://docs.microsoft.com/azure/cognitive-services/computer-vision/concept-detecting-faces)。
 
-要详细了解**人脸**服务，请参阅[人脸文档](https://docs.microsoft.com/azure/cognitive-services/face/)。
+要详细了解**人脸**服务，请参阅[人脸文档](https://learn.microsoft.com/azure/ai-services/computer-vision/overview-identity)。
