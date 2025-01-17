@@ -6,7 +6,7 @@ lab:
 
 # 使用 Azure AI 视觉分析图像
 
-Azure AI 视觉是一种人工智能功能，可支持软件系统通过分析图像来解释视觉输入。 在 Microsoft Azure 中，**视觉** Azure AI 服务为常见的计算机视觉任务提供预建模型，包括分析图像以建议标题和标签、检测常见物体和人物。 您还可以使用 Azure AI 视觉服务移除背景或创建图像的前景垫层。
+Azure AI 视觉是一种人工智能功能，可支持软件系统通过分析图像来解释视觉输入。 在 Microsoft Azure 中，**视觉** Azure AI 服务为常见的计算机视觉任务提供预建模型，包括分析图像以建议标题和标签、检测常见物体和人物。 
 
 ## 克隆本课程的存储库
 
@@ -408,86 +408,6 @@ if result.people is not None:
 3. 保存更改，并针对 **images** 文件夹中的每个图像文件运行一次程序，注意检测到的任何物体。 在每次运行后，查看在代码文件所在的同一文件夹中生成的 **objects.jpg** 文件，以查看带有批注的物体。
 
 > **注意**：在前面的任务中，你使用了单种方法来分析图像，然后逐步添加代码来分析和显示结果。 SDK 还提供了用于建议描述文字、识别标记和检测物体等的单独方法，这意味着你可使用最适合的方法来仅返回所需信息，减少需要返回的数据有效负载的大小。 有关更多详细信息，请参阅 [.NET SDK 文档](https://learn.microsoft.com/dotnet/api/overview/azure/cognitiveservices/computervision?view=azure-dotnet) 或 [Python SDK 文档](https://learn.microsoft.com/python/api/azure-cognitiveservices-vision-computervision/azure.cognitiveservices.vision.computervision)。
-
-## 去除背景或生成图像的前景哑光
-
-在某些情况下，您可能需要移除图像的背景或创建图像的前景哑光。 让我们从移除背景开始。
-
-1. 在代码文件中找到 **BackgroundForeground** 函数，在注释**移除图像背景或生成前景哑光**下添加以下代码：
-
-**C#**
-
-```C#
-// Remove the background from the image or generate a foreground matte
-Console.WriteLine($" Background removal:");
-// Define the API version and mode
-string apiVersion = "2023-02-01-preview";
-string mode = "backgroundRemoval"; // Can be "foregroundMatting" or "backgroundRemoval"
-
-string url = $"computervision/imageanalysis:segment?api-version={apiVersion}&mode={mode}";
-
-// Make the REST call
-using (var client = new HttpClient())
-{
-    var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-    client.BaseAddress = new Uri(endpoint);
-    client.DefaultRequestHeaders.Accept.Add(contentType);
-    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
-
-    var data = new
-    {
-        url = $"https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/{imageFile}?raw=true"
-    };
-
-    var jsonData = JsonSerializer.Serialize(data);
-    var contentData = new StringContent(jsonData, Encoding.UTF8, contentType);
-    var response = await client.PostAsync(url, contentData);
-
-    if (response.IsSuccessStatusCode) {
-        File.WriteAllBytes("background.png", response.Content.ReadAsByteArrayAsync().Result);
-        Console.WriteLine("  Results saved in background.png\n");
-    }
-    else
-    {
-        Console.WriteLine($"API error: {response.ReasonPhrase} - Check your body url, key, and endpoint.");
-    }
-}
-```
-
-**Python**
-
-```Python
-# Remove the background from the image or generate a foreground matte
-print('\nRemoving background from image...')
-    
-url = "{}computervision/imageanalysis:segment?api-version={}&mode={}".format(endpoint, api_version, mode)
-
-headers= {
-    "Ocp-Apim-Subscription-Key": key, 
-    "Content-Type": "application/json" 
-}
-
-image_url="https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/{}?raw=true".format(image_file)  
-
-body = {
-    "url": image_url,
-}
-    
-response = requests.post(url, headers=headers, json=body)
-
-image=response.content
-with open("background.png", "wb") as file:
-    file.write(image)
-print('  Results saved in background.png \n')
-```
-    
-2. 保存更改，并针对 **images** 文件夹中的每个图像文件运行一次程序，以打开在每张图像的代码文件所在同一文件夹中生成的 **background.jpg** 文件。  请注意，每张图片的背景都已去除。
-
-现在让我们为图像生成前景哑光。
-
-3. 在代码文件中，找到 **BackgroundForeground** 函数；然后，在注释 **定义 API 版本和模式** 下，将模式变量更改为 `foregroundMatting`。
-
-4. 保存更改，并针对 **images** 文件夹中的每个图像文件运行一次程序，以打开在每张图像的代码文件所在同一文件夹中生成的 **background.jpg** 文件。  请注意，您的图像已经生成了前景效果。
 
 ## 清理资源
 
