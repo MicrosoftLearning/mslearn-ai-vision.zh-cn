@@ -14,7 +14,7 @@ lab:
 如果尚未将 **mslearn-ai-vision** 代码存储库克隆到你要在此实验室中使用的环境，请按照以下步骤克隆它。 否则，请在 Visual Studio Code 中打开克隆的文件夹。
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：Clone**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -46,7 +46,7 @@ lab:
 
 若要训练图像分类模型，需根据训练资源创建自定义视觉项目。 为此，你将使用自定义视觉门户。
 
-1. 在 Visual Studio Code 中，查看 **07-custom-vision-image-classification/training-images** 文件夹（你在其中克隆了存储库）中的训练图像。 此文件夹包含含苹果、香蕉和橙子图像的子文件夹。
+1. 在 Visual Studio Code 中，查看 **LabFiles/07-custom-vision-image-classification/training-images** 文件夹（你在其中克隆了存储库）中的训练图像。 此文件夹包含含苹果、香蕉和橙子图像的子文件夹。
 2. 在新的浏览器标签页中，打开自定义视觉门户 (`https://customvision.ai`)。 如果出现提示，请使用与你的 Azure 订阅关联的 Microsoft 帐户进行登录，并同意服务条款。
 3. 在自定义视觉门户中，创建一个具有以下设置的新项目：
     - **名称**：对水果进行分类
@@ -55,7 +55,7 @@ lab:
     - **项目类型**：分类
     - **分类类型**：多类（每个图像一个标记）
     - **域**：食品
-4. 在新项目中，单击**\[+\] 添加图像**，然后选择先前查看的 **training-images/apple** 文件夹中的所有文件。 然后上传图像文件，指定标记*苹果*，如下所示：
+4. 在新项目中，单击“**\[+\] 添加图像**”，然后选择先前查看的 **LabFiles/07-custom-vision-image-classification/training-images/apple** 文件夹中的所有文件。 然后上传图像文件，指定标记*苹果*，如下所示：
 
 ![上传带有苹果标记的苹果](../media/upload_apples.jpg)
    
