@@ -15,7 +15,7 @@ lab:
 如果您最近已将**mslearn-ai-vision**代码存储库克隆到了要完成本实验室的环境，请在 Visual Studio Code 中将其打开；否则，请按照以下步骤立即将其克隆。
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：Clone**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -82,7 +82,7 @@ lab:
 
 视频索引器门户是用于管理视频索引项目的有用界面。 但是，有时你可能想要将视频及其见解提供给无法访问视频索引器帐户的人员。 为此，视频索引器提供了可嵌入到网页中的小组件。
 
-1. 在 Visual Studio Code 中的 **06-video-indexer** 文件夹中，打开 **analyst-video.html**。 这是一个基本的 HTML 页面，用于添加视频索引器播放器和见解小组件********。 请注意标题中对 vb.widgets.mediator.js 脚本的引用，此脚本使页面上的多个视频索引器小组件能够相互交互****。
+1. 在 Visual Studio Code 中的 **Labfiles/06-video-indexer** 文件夹中，打开 **analyst-video.html**。 这是一个基本的 HTML 页面，用于添加视频索引器播放器和见解小组件********。 请注意标题中对 vb.widgets.mediator.js 脚本的引用，此脚本使页面上的多个视频索引器小组件能够相互交互****。
 2. 在视频索引器门户中，返回到“媒体文件”页面并打开“负责任的 AI”视频********。
 3. 在视频播放器下，选择**&lt;/&gt; 嵌入**以查看 HTML Iframe 代码，以便能够嵌入小组件。
 4. 在**共享和嵌入**对话框中，选择**播放器**小组件，将视频大小设置为 560 x 315，然后将嵌入代码复制到剪贴板。
@@ -117,7 +117,7 @@ lab:
 - 使用标头中的 API 密钥对 **AccessToken** 方法的初始请求用于获取访问令牌。
 - 在调用 REST 方法以处理视频时，后续请求使用访问令牌进行验证。
 
-1. 在 Visual Studio Code 的 **06-video-indexer** 文件夹中，打开 **get-videos.ps1**。
+1. 在 Visual Studio Code 的 **Labfiles/06-video-indexer** 文件夹中，打开 **get-videos.ps1**。
 2. 在 PowerShell 脚本中，将 **YOUR_ACCOUNT_ID** 和 **YOUR_API_KEY** 占位符分别替换为之前标识的帐户 ID 和 API 密钥值。
 3. 请注意，免费帐户的*位置*为试用。 如果创建了不受限制的视频索引器帐户（具有关联的 Azure 资源），则可以将此位置更改为预配置 Azure 资源的位置（例如“美国东部”）。
 4. 查看脚本中的代码，请注意该脚本调用了两种 REST 方法：一种方法用于获取访问令牌，而另一种用于列出帐户中的视频。

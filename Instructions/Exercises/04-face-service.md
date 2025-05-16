@@ -17,7 +17,7 @@ lab:
 如果尚未克隆用于本课程的存储库，请克隆它：
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：Clone**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -44,7 +44,7 @@ lab:
 
 > **注意**：可选择将该 SDK 用于 **C#** 或 **Python**。 在下面的步骤中，请执行适用于你的语言首选项的操作。
 
-1. 在 Visual Studio Code 的**资源管理器**窗格中，浏览到 **04-face** 文件夹，并根据你的语言首选项展开 **C-Sharp** 文件夹或 **Python** 文件夹。
+1. 在 Visual Studio Code 的“**资源管理器**”窗格中，定位到 **Labfiles/04-face** 文件夹，并根据你的语言首选项展开 **C-Sharp** 文件夹或 **Python** 文件夹。
 2. 右键单击 **computer-vision** 文件夹，并打开集成终端。 然后通过运行适用于你的语言首选项的命令，安装 Azure AI 视觉 SDK 包：
 
     **C#**
@@ -203,7 +203,7 @@ lab:
 
 虽然 **Azure AI 视觉**服务提供了基本的人脸检测功能（以及许多其他图像分析功能），但**人脸**服务提供更全面的面部分析和识别功能。
 
-1. 在 Visual Studio Code 的**资源管理器**窗格中，浏览到 **04-face** 文件夹，并根据你的语言首选项展开 **C-Sharp** 文件夹或 **Python** 文件夹。
+1. 在 Visual Studio Code 的“**资源管理器**”窗格中，定位到 **Labfiles/04-face** 文件夹，并根据你的语言首选项展开 **C-Sharp** 文件夹或 **Python** 文件夹。
 2. 右键单击 **face-api** 文件夹，并打开集成终端。 然后通过运行适用于你的语言首选项的命令，安装人脸 SDK 包：
 
     **C#**
