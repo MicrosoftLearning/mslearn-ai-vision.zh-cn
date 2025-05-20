@@ -12,7 +12,7 @@ lab:
 如果已将**mslearn-ai-vision**代码存储库克隆到了要完成本实验室的环境，请在 Visual Studio Code 中将其打开；否则，请按照以下步骤立即将其克隆。
 
 1. 启动 Visual Studio Code。
-2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：克隆**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
+2. 打开面板 (SHIFT+CTRL+P) 并运行“**Git：Clone**”命令，以将 `https://github.com/MicrosoftLearning/mslearn-ai-vision` 存储库克隆到本地文件夹（任意文件夹均可）。
 3. 克隆存储库后，在 Visual Studio Code 中打开文件夹。
 4. 等待其他文件安装完毕，以支持存储库中的 C# 代码项目。
 
@@ -57,7 +57,7 @@ lab:
 
 若要训练对象检测模型，需要上传包含希望模型识别的类的图像，并标记这些图像以指示每个对象实例的边界框。
 
-1. 在 Visual Studio Code 中，查看 **03-object-detection/training-images** 文件夹（你在其中克隆了存储库）中的训练图像。 此文件夹包含水果图像。
+1. 在 Visual Studio Code 中，查看 **Labfiles/03-object-detection/training-images** 文件夹（你在其中克隆了存储库）中的训练图像。 此文件夹包含水果图像。
 2. 在自定义视觉门户中的物体检测项目中，选择**添加图像**并上传提取的文件夹中的所有图像。
 3. 上传图像后，选择第一个图像将其打开。
 4. 将鼠标悬停在图像中的任意对象上，直到自动检测到的区域如下图所示。 然后选择对象，并根据需要调整区域大小以将其环绕。
@@ -89,7 +89,7 @@ lab:
 1. 单击自定义视觉门户中**训练图像**页面右上方的*设置*(&#9881;) 图标，查看项目设置。
 2. 在**常规**（左侧）下，注意唯一标识该项目的**项目 ID**。
 3. 在右侧的**资源**下，可看到显示了密钥和终结点。 这些是*训练*资源的详细信息（还可通过在 Azure 门户中查看资源来获取这些信息）。
-4. 在 Visual Studio Code 中的 **03-object-detection** 文件夹下，根据你的语言首选项，展开 **C-Sharp** 或 **Python** 文件夹。
+4. 在 Visual Studio Code 中的 **Labfiles/03-object-detection** 文件夹下，根据你的语言首选项，展开 **C-Sharp** 文件夹或 **Python** 文件夹。
 5. 右键单击 **train-detector** 文件夹，并打开集成终端。 然后通过运行适用于你的语言首选项的命令，安装自定义视觉训练包：
 
 **C#**
@@ -145,7 +145,7 @@ pip install azure-cognitiveservices-vision-customvision==3.1.1
 
 ## 训练和测试模型
 
-现在你已标记项目中的图像，即可训练模型。 大家
+现在你已标记项目中的图像，即可训练模型。 你
 
 1. 在自定义视觉项目中，单击**训练**以使用已标记的图像训练对象检测模型。 选择**快速训练**选项。
 2. 等待训练完成（可能需要 10 分钟左右），然后检查*精度*、*召回*率和 *mAP* 性能指标 - 这些指标用于衡量分类模型的预测准确度，且应该都很高。
@@ -165,7 +165,7 @@ pip install azure-cognitiveservices-vision-customvision==3.1.1
 
 现在，你已经发布了图像分类模型，接下来，可在客户端应用程序中使用。 同样，可以选择使用 **C#** 或 **Python**。
 
-1. 在 Visual Studio Code 中，导航到 **03-object-detection** 文件夹，然后在首选语言（**C-Sharp** 或 **Python**）的文件夹中，展开 **test-detector** 文件夹。
+1. 在 Visual Studio Code 中，导航到 **Labfiles/03-object-detection** 文件夹，然后在首选语言（**C-Sharp** 或 **Python**）的文件夹中，展开 **test-detector** 文件夹。
 2. 右键单击 **test-detector** 文件夹，并打开集成终端。 然后，输入以下 SDK 特定的命令，安装自定义视觉预测包：
 
 **C#**
