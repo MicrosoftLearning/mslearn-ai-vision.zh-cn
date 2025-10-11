@@ -34,9 +34,9 @@ Azure AI *项目*为 AI 开发提供协作工作区。 首先，选择要使用�
 
 > **备注**：AI Foundry 项目可以基于 *Azure AI Foundry* 资源，该资源提供对 AI 模型（包括 Azure OpenAI）、Azure AI 服务和其他资源的访问权限，用于开发 AI 代理和聊天解决方案。 或者，项目可以基于 *AI 中心*资源；其中包含与 Azure 资源的连接，用于安全存储、计算和专用工具。 基于 Azure AI Foundry 的项目非常适合想要管理 AI 代理或聊天应用开发的资源的开发人员。 基于 AI 中心的项目更适用于处理复杂 AI 解决方案的企业开发团队。
 
-1. 在主页的“**浏览模型和功能**”部分中，搜索 `Phi-4-multimodal-instruct` 模型；我们将在项目中使用它。
+1. 在主页的“**浏览模型和功能**”部分中，搜索 `gpt-4o` 模型；我们将在项目中使用它。
 
-1. 在搜索结果中，选择 Phi-4-multimodal-instruct**** 模型以查看其详细信息，然后在模型的页面顶部，选择“使用此模型”。****
+1. 在搜索结果中，选择 **gpt-4o** 模型以查看其详细信息，然后在模型的页面顶部，选择“**使用此模型**”。
 
 1. 当提示创建项目时，输入项目的有效名称并展开“**高级选项**”。
 
@@ -48,9 +48,9 @@ Azure AI *项目*为 AI 开发提供协作工作区。 首先，选择要使用�
 
     > \* 某些 Azure AI 资源受区域模型配额约束。 如果稍后在练习中达到配额限制，你可能需要在不同的区域中创建另一个资源。
 
-1. 选择“创建”，并等待项目（包括所选的 Phi-4-multimodal-instruct 模型部署）创建。****
+1. 选择“创建”并等待项目（包括所选的 gpt-4o 模型部署）创建****。
 
-    > 注意:根据选择的模型，可能会在项目创建过程中收到其他提示。 同意条款并完成部署。
+    > <font color="red">重要说明<b></b>：</font>根据 gpt-4o 模型的可用配额，你可能会收到额外的提示，要求你将模型部署到不同区域中的资源。 如果发生这种情况，请使用默认设置执行此操作。 稍后在练习中，你将无法使用默认项目终结点 - 必须使用特定于模型的目标 URI<b><u></u></b>。
 
 1. 创建项目后，模型将显示在“模型 + 终结点”页面中****：
 
@@ -64,7 +64,7 @@ Azure AI *项目*为 AI 开发提供协作工作区。 首先，选择要使用�
 
 1. 在新浏览器选项卡中，从`https://github.com/MicrosoftLearning/mslearn-ai-vision/raw/refs/heads/main/Labfiles/gen-ai-vision/mango.jpeg`下载 [mango.jpeg](https://github.com/MicrosoftLearning/mslearn-ai-vision/raw/refs/heads/main/Labfiles/gen-ai-vision/mango.jpeg) 并将其保存到本地文件系统上的文件夹。
 
-1. 在“聊天操场”页的“**设置**”窗格中，确保已选择“**Phi-4-multimodal-instruct**”模型部署。
+1. 在“聊天操场”页面的“设置”窗格中，确认已选择 gpt-4o 模型部署********。
 
 1. 在主“聊天会话”面板的“聊天输入”框下，使用附加按钮 (**&#128206;**) 上传 *mango.jpeg* 图像文件，然后添加文本`What desserts could I make with this fruit?`并提交提示。
 
@@ -78,10 +78,6 @@ Azure AI *项目*为 AI 开发提供协作工作区。 首先，选择要使用�
 
 ### 准备应用程序配置
 
-1. 在 Azure AI Foundry 门户中，查看项目的“**概述**”页。
-
-1. 在“终结点和密钥”区域，确保已选中 Azure AI Foundry 库，并记下“Azure AI Foundry 项目终结点”************。 你将使用此连接字符串连接到客户端应用程序中的项目。
-
 1. 打开新的浏览器选项卡（使 Azure AI Foundry 门户在现有选项卡中保持打开状态）。 然后在新选项卡中，浏览到 [Azure 门户](https://portal.azure.com)，网址为：`https://portal.azure.com`；如果出现提示，请使用 Azure 凭据登录。
 
     关闭任何欢迎通知以查看 Azure 门户主页。
@@ -91,8 +87,6 @@ Azure AI *项目*为 AI 开发提供协作工作区。 首先，选择要使用�
     在 Azure 门户底部的窗格中，Cloud Shell 提供命令行接口。 可以调整此窗格的大小或最大化此窗格，以便更易于使用。
 
     > **备注**：如果以前创建了使用 *Bash* 环境的 Cloud Shell，请将其切换到 ***PowerShell***。
-
-    > **注意**：如果门户要求你选择存储来保存文件，请选择“不需要存储帐户”，选择正在使用的订阅，然后按“应用”。********
 
 1. 在 Cloud Shell 工具栏的“**设置**”菜单中，选择“**转到经典版本**”（这是使用代码编辑器所必需的）。
 
@@ -129,7 +123,9 @@ Azure AI *项目*为 AI 开发提供协作工作区。 首先，选择要使用�
 
     该文件已在代码编辑器中打开。
 
-1. 在代码文件中，将 your_project_endpoint 占位符替换为 Foundry 项目终结点（从 Azure AI Foundry 门户中的项目“概述”页复制），并将 your_model_deployment 占位符替换为分配给 Phi-4-multimodal-instruct 模型部署的名称。************
+    > <font color="red">重要说明<b></b>：</font>如果在项目的默认区域中部署了 gpt-4o 模型，则可以使用 Azure AI Foundry 项目或项目的“概述”页面上的 Azure OpenAI 终结点来连接到模型<b></b><b></b><b></b>。 如果配额不足且已将模型部署到另一个区域，请在“模型 + 终结点”页上，选择你的模型并使用模型的“目标 URI”<b></b><b></b>。
+
+1. 在代码文件中，将 your_project_endpoint 占位符替换为模型的适当终结点，并将 your_model_deployment 占位符替换为分配给 gpt-4o 模型部署的名称********。
 
 1. 替换占位符后，在代码编辑器中使用 “CTRL+S”**** 命令或“ 右键单击 > 保存”**** 保存更改，然后使用 “CTRL+Q”**** 命令或 “右键单击 > 退出”**** 关闭代码编辑器，同时保持 Cloud Shell 命令行打开。
 
