@@ -1,3 +1,5 @@
+**⚠️ This GitHub repo will retire on 30th December 2025.** 
+
 # 在 Azure 中开发计算机视觉解决方案
 
 此存储库中的练习旨在为你提供动手学习体验，你将在其中探索开发人员在 Microsoft Azure 上创建计算机视觉解决方案时执行的常见任务。
